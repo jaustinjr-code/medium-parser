@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "rss-parser": "^3.13.0"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
   }
 }
