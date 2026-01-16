@@ -4,15 +4,11 @@
  * @param {String} authorUsername
  * @returns Promise<any>
  */
-export const getFeed = async (authorUsername) => {
+const getFeed = async (authorUsername) => {
   const mediumFeedUrl = "https://medium.com/feed";
   const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
-  let response = await fetch(`https://api.allorigins.win/get?url=${url}`).catch(
-    (err) => {
-      console.log("Something wrong happened.");
-      console.error("All Origins failed.", err);
-    }
-  );
+
+  let response = await fetchRssFeed(url);
 
   if (!(response && response.ok)) return {};
 
@@ -26,4 +22,16 @@ export const getFeed = async (authorUsername) => {
   return feed;
 };
 
-export default { getFeed };
+const fetchRssFeed = async (feedUrl) => {
+  return await fetch(`https://api.allorigins.win/get?url=${feedUrl}`).catch(
+    (err) => {
+      console.log("Something wrong happened.");
+      console.error("All Origins failed.", err);
+    }
+  );
+};
+
+module.exports = {
+  getFeed,
+  fetchRssFeed,
+};
