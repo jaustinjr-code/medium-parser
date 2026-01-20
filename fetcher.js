@@ -1,3 +1,5 @@
+const { fetchRssFeed } = require("./rssFeedHelper");
+
 /**
  * Uses All Origins to fetch a Medium RSS feed for a given author.
  * Author should be the Medium username only, e.g. '@jaustinjr.blog'
@@ -22,16 +24,6 @@ const getFeed = async (authorUsername) => {
   return feed;
 };
 
-const fetchRssFeed = async (feedUrl) => {
-  return await fetch(`https://api.allorigins.win/get?url=${feedUrl}`).catch(
-    (err) => {
-      console.log("Something wrong happened.");
-      console.error("All Origins failed.", err);
-    }
-  );
-};
-
 module.exports = {
   getFeed,
-  fetchRssFeed,
 };
