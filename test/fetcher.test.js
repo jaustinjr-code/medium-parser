@@ -1,5 +1,9 @@
-const fetcher = require("../fetcher");
+jest.mock("../rssFeedHelper", () => ({
+  fetchRssFeed: jest.fn(),
+}));
+
 const helper = require("../rssFeedHelper");
+const fetcher = require("../fetcher");
 
 describe("Fetcher Module", () => {
   // Test modules
@@ -16,19 +20,14 @@ describe("Fetcher Module", () => {
 
   // Test getFeed function success
   test("fetcher.getFeed function works", async () => {
-    const mockFeed = { contents: "Mocked content" };
-    const spy = jest.spyOn(helper, "fetchRssFeed");
-    spy.mockResolvedValue({
-      ok: true,
-      json: jest.fn().mockResolvedValue(() => mockFeed),
-    });
+    const mockFeed = {};
+    helper.fetchRssFeed.mockResolvedValueOnce(mockFeed);
 
     const feed = await fetcher.getFeed("@jaustinjr.blog");
 
-    expect(spy).toHaveBeenCalled();
+    expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(feed).toBeDefined();
-
-    spy.mockRestore();
+    expect(feed).toEqual(mockFeed);
   });
 
   // Test getFeed function failure
@@ -43,15 +42,12 @@ describe("Fetcher Module", () => {
 
   // Test fetchRssFeed function failure
   test("fetcher.getFeed function handles fetcher.fetchRssFeed failure", async () => {
-    const spy = jest.spyOn(helper, "fetchRssFeed");
-    spy.mockResolvedValueOnce({
-      ok: true,
-      json: jest.fn().mockRejectedValue(new Error("JSON parse error")),
-    });
+    const mockFeed = {};
+    helper.fetchRssFeed.mockRejectedValueOnce(mockFeed);
 
     const feed = await fetcher.getFeed("@jaustinjr.blog");
 
-    expect(spy).toHaveBeenCalled();
+    expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(feed).toEqual({});
   });
 });

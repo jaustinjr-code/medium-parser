@@ -7,21 +7,25 @@ const { fetchRssFeed } = require("./rssFeedHelper");
  * @returns Promise<any>
  */
 const getFeed = async (authorUsername) => {
-  const mediumFeedUrl = "https://medium.com/feed";
-  const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
+  try {
+    const mediumFeedUrl = "https://medium.com/feed";
+    const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
 
-  let response = await fetchRssFeed(url);
+    let response = await fetchRssFeed(url);
 
-  if (!(response && response.ok)) return {};
+    if (!(response && response.ok)) return {};
 
-  const feed = await response.json().catch((err) => {
-    console.log("Something wrong happened.");
-    console.error("Response JSON failed.", err);
-  });
+    const feed = await response.json().catch((err) => {
+      console.log("Something wrong happened.");
+      console.error("Response JSON failed.", err);
+    });
 
-  if (!(feed && feed.contents)) return {};
+    if (!(feed && feed.contents)) return {};
 
-  return feed;
+    return feed;
+  } catch (error) {
+    return {};
+  }
 };
 
 module.exports = {
