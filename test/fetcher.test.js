@@ -14,13 +14,13 @@ describe("Fetcher Module", () => {
 
   // Test functions
   test("fetcher functions exist", () => {
-    expect(fetcher.getFeed).toBeDefined();
     expect(helper.fetchRssFeed).toBeDefined();
+    expect(fetcher.getFeed).toBeDefined();
   });
 
   // Test getFeed function success
   test("fetcher.getFeed function works", async () => {
-    const mockFeed = {};
+    const mockFeed = { contents: "Mocked content" };
     helper.fetchRssFeed.mockResolvedValueOnce(mockFeed);
 
     const feed = await fetcher.getFeed("@jaustinjr.blog");
