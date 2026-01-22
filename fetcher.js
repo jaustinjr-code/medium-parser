@@ -11,14 +11,7 @@ const getFeed = async (authorUsername) => {
     const mediumFeedUrl = "https://medium.com/feed";
     const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
 
-    let response = await fetchRssFeed(url);
-
-    if (!(response && response.ok)) return {};
-
-    const feed = await response.json().catch((err) => {
-      console.log("Something wrong happened.");
-      console.error("Response JSON failed.", err);
-    });
+    const feed = await fetchRssFeed(url);
 
     if (!(feed && feed.contents)) return {};
 
