@@ -4,6 +4,13 @@ jest.mock("../rssFeedHelper", () => ({
 
 const helper = require("../rssFeedHelper");
 const fetcher = require("../fetcher");
+const {
+  mockRssError,
+  mockFetchError,
+  mockParseError,
+  mockStructureError,
+  mockUnknownAuthorError,
+} = require("./util/mockErrors");
 
 describe("Fetcher Module", () => {
   // Test modules
@@ -29,13 +36,12 @@ describe("Fetcher Module", () => {
    *  2. RSS feed fails to locate user account, return user-friendly error
    *  3. All Origins fetch fails, return user-friendly error
    *  4. Contents not found in feed response, return user-friendly error
+   *  5. JSON parse fails, return user-friendly error
    */
 
   // Test getFeed failure #1
   test("fetcher.getFeed handles failure", async () => {
-    const mockResult = new Error("Medium author could not be found.", {
-      cause: Error(),
-    });
+    const mockResult = mockUnknownAuthorError();
     const spy = jest.spyOn(fetcher, "getFeed");
 
     const result = await fetcher.getFeed("incorrect account");
@@ -46,9 +52,7 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #2
   test("fetcher.getFeed unknown author error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = new Error("Unknown Medium author.", {
-      cause: Error(),
-    });
+    const mockResult = mockFetchError();
     helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
 
     const result = await fetcher.getFeed("incorrect account");
@@ -59,9 +63,7 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #3
   test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = new Error("Unable to fetch author feed.", {
-      cause: Error(),
-    });
+    const mockResult = mockRssError();
     helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
 
     const result = await fetcher.getFeed("@jaustinjr.blog");
@@ -76,9 +78,7 @@ describe("Fetcher Module", () => {
       json: jest.fn().mockResolvedValue({ invalid: "structure" }),
     };
     const mockActual = { contents: "Valid content" };
-    const mockResult = new Error("Received an invalid feed structure.", {
-      cause: Error(),
-    });
+    const mockResult = mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
     const result = await fetcher.getFeed("@jaustinjr.blog");
@@ -86,6 +86,17 @@ describe("Fetcher Module", () => {
     expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(helper.fetchRssFeed).not.toEqual(mockActual);
     expect(result).toBeDefined();
+    expect(result).toEqual(mockResult);
+  });
+
+  // Test getFeed failure #5
+  test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
+    const mockResult = mockParseError();
+    helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
+
+    const result = await fetcher.getFeed("@jaustinjr.blog");
+
+    expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(result).toEqual(mockResult);
   });
 
