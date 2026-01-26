@@ -44,10 +44,11 @@ describe("Fetcher Module", () => {
     const mockResult = mockUnknownAuthorError();
     const spy = jest.spyOn(fetcher, "getFeed");
 
-    const result = await fetcher.getFeed("incorrect account");
+    await fetcher.getFeed("incorrect account").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
 
     expect(spy).toHaveBeenCalled();
-    expect(result).toEqual(mockResult);
   });
 
   // Test getFeed failure #2

@@ -1,3 +1,4 @@
+const { UnknownAuthorError } = require("./errors");
 const { fetchRssFeed } = require("./rssFeedHelper");
 
 /**
@@ -7,18 +8,22 @@ const { fetchRssFeed } = require("./rssFeedHelper");
  * @returns Promise<any>
  */
 const getFeed = async (authorUsername) => {
-  try {
-    const mediumFeedUrl = "https://medium.com/feed";
-    const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
-
-    const feed = await fetchRssFeed(url);
-
-    if (!(feed && feed.contents)) return {};
-
-    return feed;
-  } catch (error) {
-    return {};
+  if (!validateAuthorUsername(authorUsername)) {
+    return Promise.reject(new UnknownAuthorError());
   }
+
+  const mediumFeedUrl = "https://medium.com/feed";
+  const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
+
+  const feed = await fetchRssFeed(url);
+  if (!(feed && feed.contents)) return {};
+
+  return feed;
+};
+
+const validateAuthorUsername = (authorUsername) => {
+  // Basic validation to check that it starts with '@' and has more characters
+  return typeof authorUsername === "string" && /^@.+/.test(authorUsername);
 };
 
 module.exports = {
