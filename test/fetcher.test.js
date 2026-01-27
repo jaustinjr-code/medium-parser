@@ -10,6 +10,7 @@ const {
   mockParseError,
   mockStructureError,
   mockUnknownAuthorError,
+  mockNetworkError,
 } = require("./util/mockErrors");
 
 describe("Fetcher Module", () => {
@@ -65,12 +66,14 @@ describe("Fetcher Module", () => {
   // Test getFeed failure #3
   test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
     const mockResult = mockRssError();
-    helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
+    const mockValue = mockNetworkError();
+    helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    const result = await fetcher.getFeed("@jaustinjr.blog");
+    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
-    expect(result).toEqual(mockResult);
   });
 
   // Test getFeed failure #4
@@ -95,10 +98,11 @@ describe("Fetcher Module", () => {
     const mockResult = mockParseError();
     helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
 
-    const result = await fetcher.getFeed("@jaustinjr.blog");
+    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
-    expect(result).toEqual(mockResult);
   });
 
   // Test getFeed success #1

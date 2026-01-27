@@ -33,10 +33,27 @@ class UnknownAuthorError extends Error {
   }
 }
 
+class NetworkError extends Error {
+  constructor(message, options) {
+    super(message, options);
+    this.name = "NetworkError";
+  }
+}
+
+class HttpError extends Error {
+  constructor(status, message, options) {
+    super(message, options);
+    this.name = "HttpError";
+    this.status = status;
+  }
+}
+
 module.exports = {
   RssError,
   FetchError,
   ParseError,
   StructureError,
   UnknownAuthorError,
+  NetworkError,
+  HttpError,
 };

@@ -4,6 +4,8 @@ const {
   ParseError,
   StructureError,
   UnknownAuthorError,
+  NetworkError,
+  HttpError,
 } = require("../../errors");
 
 const mockRssError = (message, options) => new RssError(message, options);
@@ -13,6 +15,10 @@ const mockStructureError = (message, options) =>
   new StructureError(message, options);
 const mockUnknownAuthorError = (message, options) =>
   new UnknownAuthorError(message, options);
+const mockNetworkError = (message, options) =>
+  new NetworkError(message, options);
+const mockHttpError = (status, message, options) =>
+  new HttpError(status, message, options);
 
 module.exports = {
   mockRssError,
@@ -20,4 +26,6 @@ module.exports = {
   mockParseError,
   mockStructureError,
   mockUnknownAuthorError,
+  mockNetworkError,
+  mockHttpError,
 };

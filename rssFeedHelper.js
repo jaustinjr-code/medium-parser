@@ -1,14 +1,22 @@
+const { NetworkError, HttpError, ParseError } = require("./errors");
+
 const fetchRssFeed = async (feedUrl) => {
   const res = await fetch(
     `https://api.allorigins.win/get?url=${feedUrl}`,
   ).catch((err) => {
-    console.log("Something wrong happened.");
-    console.error("All Origins failed.", err);
+    throw new NetworkError("Failed to fetch feed. Check your connection.", {
+      cause: err,
+    });
   });
 
+  if (!res.ok) {
+    throw new HttpError(res.status, `Feed server returned ${res.status}`, {
+      cause: res,
+    });
+  }
+
   return await res.json().catch((err) => {
-    console.log("Something wrong happened.");
-    console.error("Response JSON failed.", err);
+    throw new ParseError((options = { cause: err }));
   });
 };
 
