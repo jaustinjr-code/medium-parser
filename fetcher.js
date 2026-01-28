@@ -4,6 +4,7 @@ const {
   NetworkError,
   HttpError,
   ParseError,
+  FetchError,
 } = require("./errors");
 const { fetchRssFeed } = require("./rssFeedHelper");
 
@@ -35,20 +36,18 @@ const validateAuthorUsername = (authorUsername) => {
 };
 
 const getUserFriendlyError = (error) => {
-  switch (error) {
-    case error instanceof UnknownAuthorError:
-      return new UnknownAuthorError();
-    case error instanceof NetworkError:
-    case error instanceof HttpError:
-      return new RssError(
-        (options = {
-          cause: error,
-        }),
-      );
-    case error instanceof ParseError:
-      return new ParseError({ cause: error });
-    default:
-      return new RssError();
+  if (error instanceof UnknownAuthorError) {
+    return new UnknownAuthorError();
+  } else if (
+    error instanceof FetchError ||
+    error instanceof NetworkError ||
+    error instanceof HttpError
+  ) {
+    return new RssError();
+  } else if (error instanceof ParseError) {
+    return new ParseError();
+  } else {
+    return error;
   }
 };
 
