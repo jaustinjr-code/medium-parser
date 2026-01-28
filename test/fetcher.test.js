@@ -64,7 +64,7 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #3
-  test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
+  test("fetcher.getFeed network error thrown by helper.fetchRssFeed", async () => {
     const mockResult = mockRssError();
     const mockValue = mockNetworkError();
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
@@ -94,7 +94,7 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #5
-  test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
+  test("fetcher.getFeed parse error thrown by helper.fetchRssFeed", async () => {
     const mockResult = mockParseError();
     helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
 

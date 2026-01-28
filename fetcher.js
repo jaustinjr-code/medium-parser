@@ -1,4 +1,10 @@
-const { UnknownAuthorError } = require("./errors");
+const {
+  UnknownAuthorError,
+  RssError,
+  NetworkError,
+  HttpError,
+  ParseError,
+} = require("./errors");
 const { fetchRssFeed } = require("./rssFeedHelper");
 
 /**
@@ -15,7 +21,9 @@ const getFeed = async (authorUsername) => {
   const mediumFeedUrl = "https://medium.com/feed";
   const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
 
-  const feed = await fetchRssFeed(url);
+  const feed = await fetchRssFeed(url).catch((err) => {
+    return Promise.reject(getUserFriendlyError(err));
+  });
   if (!(feed && feed.contents)) return {};
 
   return feed;
@@ -24,6 +32,24 @@ const getFeed = async (authorUsername) => {
 const validateAuthorUsername = (authorUsername) => {
   // Basic validation to check that it starts with '@' and has more characters
   return typeof authorUsername === "string" && /^@.+/.test(authorUsername);
+};
+
+const getUserFriendlyError = (error) => {
+  switch (error) {
+    case error instanceof UnknownAuthorError:
+      return new UnknownAuthorError();
+    case error instanceof NetworkError:
+    case error instanceof HttpError:
+      return new RssError(
+        (options = {
+          cause: error,
+        }),
+      );
+    case error instanceof ParseError:
+      return new ParseError({ cause: error });
+    default:
+      return new RssError();
+  }
 };
 
 module.exports = {
