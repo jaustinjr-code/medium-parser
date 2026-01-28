@@ -38,7 +38,8 @@ describe("Fetcher Module", () => {
    *  2. RSS feed fails to locate user account, return user-friendly error
    *  3. All Origins fetch fails, return user-friendly error
    *  4. Contents not found in feed response, return user-friendly error
-   *  5. All Origins fetch completes with HTTP failure, return user-friendly error
+   *  5. JSON parse fails, return user-friendly error
+   *  6. All Origins fetch completes with HTTP failure, return user-friendly error
    */
 
   // Test getFeed failure #1
