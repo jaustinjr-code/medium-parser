@@ -41,11 +41,10 @@ const getUserFriendlyError = (error) => {
   } else if (
     error instanceof FetchError ||
     error instanceof NetworkError ||
-    error instanceof HttpError
+    error instanceof HttpError ||
+    error instanceof ParseError
   ) {
     return new RssError();
-  } else if (error instanceof ParseError) {
-    return new ParseError();
   } else {
     return error;
   }

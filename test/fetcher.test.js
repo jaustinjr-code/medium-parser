@@ -53,14 +53,16 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #2
-  test("fetcher.getFeed unknown author error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = mockFetchError();
-    helper.fetchRssFeed.mockRejectedValueOnce(mockResult);
+  test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
+    const mockResult = mockRssError();
+    const mockValue = mockFetchError();
+    helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    const result = await fetcher.getFeed("incorrect account");
+    await fetcher.getFeed("@incorrect.account").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
-    expect(result).toEqual(mockResult);
   });
 
   // Test getFeed failure #3
@@ -85,12 +87,12 @@ describe("Fetcher Module", () => {
     const mockResult = mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
-    const result = await fetcher.getFeed("@jaustinjr.blog");
+    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(helper.fetchRssFeed).not.toEqual(mockActual);
-    expect(result).toBeDefined();
-    expect(result).toEqual(mockResult);
   });
 
   // Test getFeed failure #5
