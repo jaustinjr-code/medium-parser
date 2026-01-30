@@ -17,8 +17,8 @@ const mockUnknownAuthorError = (message, options) =>
   new UnknownAuthorError(message, options);
 const mockNetworkError = (message, options) =>
   new NetworkError(message, options);
-const mockHttpError = (status, message, options) =>
-  new HttpError(status, message, options);
+const mockHttpError = (message, options, status) =>
+  new HttpError(message, options, status);
 
 module.exports = {
   mockRssError,
