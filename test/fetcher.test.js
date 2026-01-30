@@ -111,13 +111,16 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #6
-  test("fetcher.getFeed parse error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = mockRssError();
+  test("fetcher.getFeed HTTP error thrown by helper.fetchRssFeed", async () => {
     const mockValue = mockHttpError();
+    const mockResult = mockRssError(undefined, {
+      cause: mockValue,
+    });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
       expect(err).toEqual(mockResult);
+      expect(err.cause).toBe(mockValue);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
