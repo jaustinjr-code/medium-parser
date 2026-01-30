@@ -10,13 +10,15 @@ const fetchRssFeed = async (feedUrl) => {
   });
 
   if (!res.ok) {
-    throw new HttpError(res.status, `Feed server returned ${res.status}`, {
-      cause: res,
-    });
+    throw new HttpError(
+      `Feed server returned ${res.status}`,
+      { cause: res },
+      res.status,
+    );
   }
 
   return await res.json().catch((err) => {
-    throw new ParseError((options = { cause: err }));
+    throw new ParseError(undefined, { cause: err });
   });
 };
 
