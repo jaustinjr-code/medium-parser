@@ -56,12 +56,13 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #2
   test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = mockRssError();
     const mockValue = mockFetchError();
+    const mockResult = mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@incorrect.account").catch((err) => {
       expect(err).toEqual(mockResult);
+      expect(err.cause).toBe(mockValue);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
@@ -69,12 +70,13 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #3
   test("fetcher.getFeed network error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = mockRssError();
     const mockValue = mockNetworkError();
+    const mockResult = mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
       expect(err).toEqual(mockResult);
+      expect(err.cause).toBe(mockValue);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
@@ -99,12 +101,13 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #5
   test("fetcher.getFeed parse error thrown by helper.fetchRssFeed", async () => {
-    const mockResult = mockRssError();
     const mockValue = mockParseError();
+    const mockResult = mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
       expect(err).toEqual(mockResult);
+      expect(err.cause).toBe(mockValue);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
@@ -113,9 +116,7 @@ describe("Fetcher Module", () => {
   // Test getFeed failure #6
   test("fetcher.getFeed HTTP error thrown by helper.fetchRssFeed", async () => {
     const mockValue = mockHttpError();
-    const mockResult = mockRssError(undefined, {
-      cause: mockValue,
-    });
+    const mockResult = mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
