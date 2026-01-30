@@ -44,7 +44,7 @@ const getUserFriendlyError = (error) => {
     error instanceof HttpError ||
     error instanceof ParseError
   ) {
-    return new RssError();
+    return new RssError(undefined, { cause: error });
   } else {
     return error;
   }
