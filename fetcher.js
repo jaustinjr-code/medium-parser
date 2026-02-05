@@ -1,12 +1,12 @@
-const {
+import {
   UnknownAuthorError,
   RssError,
   NetworkError,
   HttpError,
   ParseError,
   FetchError,
-} = require("./errors");
-const { fetchRssFeed } = require("./rssFeedHelper");
+} from "./errors.js";
+import { fetchRssFeed } from "./rssFeedHelper.js";
 
 /**
  * Uses All Origins to fetch a Medium RSS feed for a given author.
@@ -14,7 +14,7 @@ const { fetchRssFeed } = require("./rssFeedHelper");
  * @param {String} authorUsername
  * @returns Promise<any>
  */
-const getFeed = async (authorUsername) => {
+export const getFeed = async (authorUsername) => {
   if (!validateAuthorUsername(authorUsername)) {
     return Promise.reject(new UnknownAuthorError());
   }
@@ -50,6 +50,6 @@ const getUserFriendlyError = (error) => {
   }
 };
 
-module.exports = {
+export default {
   getFeed,
 };

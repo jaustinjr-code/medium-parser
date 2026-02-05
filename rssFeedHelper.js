@@ -1,6 +1,6 @@
-const { NetworkError, HttpError, ParseError } = require("./errors");
+import { NetworkError, HttpError, ParseError } from "./errors";
 
-const fetchRssFeed = async (feedUrl) => {
+export const fetchRssFeed = async (feedUrl) => {
   const res = await fetch(
     `https://api.allorigins.win/get?url=${feedUrl}`,
   ).catch((err) => {
@@ -22,6 +22,6 @@ const fetchRssFeed = async (feedUrl) => {
   });
 };
 
-module.exports = {
+export default {
   fetchRssFeed,
 };

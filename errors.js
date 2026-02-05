@@ -1,4 +1,4 @@
-class RssError extends Error {
+export class RssError extends Error {
   constructor(message = "Unable to retrieve RSS feed.", options) {
     super(message, options);
     this.name = "RssError";
@@ -7,7 +7,7 @@ class RssError extends Error {
   }
 }
 
-class FetchError extends Error {
+export class FetchError extends Error {
   constructor(message = "Unable to fetch URI.", options) {
     super(message, options);
     this.name = "FetchError";
@@ -16,7 +16,7 @@ class FetchError extends Error {
   }
 }
 
-class ParseError extends Error {
+export class ParseError extends Error {
   constructor(message = "Unable to parse content.", options) {
     super(message, options);
     this.name = "ParseError";
@@ -25,7 +25,7 @@ class ParseError extends Error {
   }
 }
 
-class StructureError extends Error {
+export class StructureError extends Error {
   constructor(message = "Invalid content structure.", options) {
     super(message, options);
     this.name = "StructureError";
@@ -34,7 +34,7 @@ class StructureError extends Error {
   }
 }
 
-class UnknownAuthorError extends Error {
+export class UnknownAuthorError extends Error {
   constructor(message = "Invalid content owner.", options) {
     super(message, options);
     this.name = "UnknownAuthorError";
@@ -43,7 +43,7 @@ class UnknownAuthorError extends Error {
   }
 }
 
-class NetworkError extends Error {
+export class NetworkError extends Error {
   constructor(message, options) {
     super(message, options);
     this.name = "NetworkError";
@@ -52,7 +52,7 @@ class NetworkError extends Error {
   }
 }
 
-class HttpError extends Error {
+export class HttpError extends Error {
   constructor(message, options, status) {
     super(message, options);
     this.name = "HttpError";
@@ -62,7 +62,7 @@ class HttpError extends Error {
   }
 }
 
-module.exports = {
+export default {
   RssError,
   FetchError,
   ParseError,
