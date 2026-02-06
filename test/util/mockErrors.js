@@ -1,4 +1,4 @@
-const {
+import {
   RssError,
   FetchError,
   ParseError,
@@ -6,21 +6,24 @@ const {
   UnknownAuthorError,
   NetworkError,
   HttpError,
-} = require("../../errors");
+} from "../../errors";
 
-const mockRssError = (message, options) => new RssError(message, options);
-const mockFetchError = (message, options) => new FetchError(message, options);
-const mockParseError = (message, options) => new ParseError(message, options);
-const mockStructureError = (message, options) =>
+export const mockRssError = (message, options) =>
+  new RssError(message, options);
+export const mockFetchError = (message, options) =>
+  new FetchError(message, options);
+export const mockParseError = (message, options) =>
+  new ParseError(message, options);
+export const mockStructureError = (message, options) =>
   new StructureError(message, options);
-const mockUnknownAuthorError = (message, options) =>
+export const mockUnknownAuthorError = (message, options) =>
   new UnknownAuthorError(message, options);
-const mockNetworkError = (message, options) =>
+export const mockNetworkError = (message, options) =>
   new NetworkError(message, options);
-const mockHttpError = (message, options, status) =>
+export const mockHttpError = (message, options, status) =>
   new HttpError(message, options, status);
 
-module.exports = {
+export default {
   mockRssError,
   mockFetchError,
   mockParseError,

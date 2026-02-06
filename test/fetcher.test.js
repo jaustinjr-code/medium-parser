@@ -1,10 +1,13 @@
-jest.mock("../rssFeedHelper", () => ({
+import { jest } from "@jest/globals";
+
+jest.unstable_mockModule("../rssFeedHelper", () => ({
   fetchRssFeed: jest.fn(),
 }));
 
-const helper = require("../rssFeedHelper");
-const fetcher = require("../fetcher");
-const {
+import helper from "../rssFeedHelper";
+
+import fetcher from "../fetcher";
+import {
   mockRssError,
   mockFetchError,
   mockParseError,
@@ -12,7 +15,7 @@ const {
   mockUnknownAuthorError,
   mockNetworkError,
   mockHttpError,
-} = require("./util/mockErrors");
+} from "./util/mockErrors";
 
 describe("Fetcher Module", () => {
   // Test modules
