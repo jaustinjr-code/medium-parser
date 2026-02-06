@@ -30,7 +30,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "jest"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "dependencies": {
     "rss-parser": "^3.13.0"

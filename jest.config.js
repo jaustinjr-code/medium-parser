@@ -2,7 +2,7 @@
 
 /** @type {import('jest').Config} */
 const config = {
-  // transform: {},
+  transform: {},
 };
 
 export default config;
