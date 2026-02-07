@@ -1,21 +1,20 @@
 import { jest } from "@jest/globals";
 
-jest.unstable_mockModule("../rssFeedHelper", () => ({
+// Mock helper module
+jest.unstable_mockModule("../rssFeedHelper.js", () => ({
   fetchRssFeed: jest.fn(),
 }));
 
-import helper from "../rssFeedHelper";
+let helper;
+let fetcher;
+let errors;
 
-import fetcher from "../fetcher";
-import {
-  mockRssError,
-  mockFetchError,
-  mockParseError,
-  mockStructureError,
-  mockUnknownAuthorError,
-  mockNetworkError,
-  mockHttpError,
-} from "./util/mockErrors";
+// Dynamic imports
+beforeAll(async () => {
+  helper = await import("../rssFeedHelper.js");
+  fetcher = await import("../fetcher.js");
+  errors = await import("./util/mockErrors.js");
+});
 
 describe("Fetcher Module", () => {
   // Test modules
@@ -47,20 +46,17 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #1
   test("fetcher.getFeed handles failure", async () => {
-    const mockResult = mockUnknownAuthorError();
-    const spy = jest.spyOn(fetcher, "getFeed");
+    const mockResult = errors.mockUnknownAuthorError();
 
-    await fetcher.getFeed("incorrect account").catch((err) => {
-      expect(err).toEqual(mockResult);
-    });
-
-    expect(spy).toHaveBeenCalled();
+    await expect(fetcher.getFeed("incorrect account")).rejects.toEqual(
+      mockResult,
+    );
   });
 
   // Test getFeed failure #2
   test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
-    const mockValue = mockFetchError();
-    const mockResult = mockRssError(undefined, { cause: mockValue });
+    const mockValue = errors.mockFetchError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@incorrect.account").catch((err) => {
@@ -73,8 +69,8 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #3
   test("fetcher.getFeed network error thrown by helper.fetchRssFeed", async () => {
-    const mockValue = mockNetworkError();
-    const mockResult = mockRssError(undefined, { cause: mockValue });
+    const mockValue = errors.mockNetworkError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
@@ -91,7 +87,7 @@ describe("Fetcher Module", () => {
       json: jest.fn().mockResolvedValue({ invalid: "structure" }),
     };
     const mockActual = { contents: "Valid content" };
-    const mockResult = mockStructureError();
+    const mockResult = errors.mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
@@ -104,8 +100,8 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #5
   test("fetcher.getFeed parse error thrown by helper.fetchRssFeed", async () => {
-    const mockValue = mockParseError();
-    const mockResult = mockRssError(undefined, { cause: mockValue });
+    const mockValue = errors.mockParseError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
@@ -118,8 +114,8 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #6
   test("fetcher.getFeed HTTP error thrown by helper.fetchRssFeed", async () => {
-    const mockValue = mockHttpError();
-    const mockResult = mockRssError(undefined, { cause: mockValue });
+    const mockValue = errors.mockHttpError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
