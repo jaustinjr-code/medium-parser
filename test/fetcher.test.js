@@ -42,6 +42,7 @@ describe("Fetcher Module", () => {
    *  4. Contents not found in feed response, return user-friendly error
    *  5. JSON parse fails, return user-friendly error
    *  6. All Origins fetch completes with HTTP failure, return user-friendly error
+   *  7. All Origins fetch completes without feed content, return user-friendly error
    */
 
   // Test getFeed failure #1
@@ -121,6 +122,19 @@ describe("Fetcher Module", () => {
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
+    });
+
+    expect(helper.fetchRssFeed).toHaveBeenCalled();
+  });
+
+  // Test getFeed failure #7
+  test("fetcher.getFeed content error thrown by fetcher.getFeed from complete helper.fetchRssFeed", async () => {
+    const mockValue = { content: null };
+    const mockResult = errors.mockStructureError();
+    helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
+
+    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+      expect(err).toBe(mockResult);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();

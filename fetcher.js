@@ -4,6 +4,7 @@ import {
   NetworkError,
   HttpError,
   ParseError,
+  StructureError,
   FetchError,
 } from "./errors.js";
 import { fetchRssFeed } from "./rssFeedHelper.js";
@@ -25,7 +26,10 @@ export const getFeed = async (authorUsername) => {
   const feed = await fetchRssFeed(url).catch((err) => {
     return Promise.reject(getUserFriendlyError(err));
   });
-  if (!(feed && feed.contents)) return {};
+
+  if (!(feed && feed.contents)) {
+    return Promise.reject(new StructureError());
+  }
 
   return feed;
 };
