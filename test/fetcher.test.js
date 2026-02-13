@@ -131,10 +131,10 @@ describe("Fetcher Module", () => {
   test("fetcher.getFeed content error thrown by fetcher.getFeed from complete helper.fetchRssFeed", async () => {
     const mockValue = { content: null };
     const mockResult = errors.mockStructureError();
-    helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
+    helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
     await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
-      expect(err).toBe(mockResult);
+      expect(err).toEqual(mockResult);
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
