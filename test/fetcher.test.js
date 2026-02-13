@@ -129,7 +129,7 @@ describe("Fetcher Module", () => {
 
   // Test getFeed failure #7
   test("fetcher.getFeed content error thrown by fetcher.getFeed from complete helper.fetchRssFeed", async () => {
-    const mockValue = { content: null };
+    const mockValue = { contents: null };
     const mockResult = errors.mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
