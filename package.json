@@ -17,13 +17,28 @@
   "license": "ISC",
   "author": "jaustinjr",
   "type": "module",
-  "main": "fetcher.js",
-  "types": "fetcher.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "exports": {
     ".": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./fetcher": {
       "types": "./fetcher.d.ts",
       "require": "./fetcher.js",
       "default": "./fetcher.js"
+    },
+    "./rssFeedHelper": {
+      "types": "./rssFeedHelper.d.ts",
+      "require": "./rssFeedHelper.js",
+      "default": "./rssFeedHelper.js"
+    },
+    "./errors": {
+      "types": "./errors.d.ts",
+      "require": "./errors.js",
+      "default": "./errors.js"
     }
   },
   "directories": {
