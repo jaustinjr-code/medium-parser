@@ -20,8 +20,12 @@ export const getFeed = async (authorUsername) => {
     return Promise.reject(new UnknownAuthorError());
   }
 
-  const mediumFeedUrl = "https://medium.com/feed";
-  const url = encodeURIComponent(`${mediumFeedUrl}/${authorUsername}`);
+  let url;
+  try {
+    url = getMediumFeedUrl(authorUsername);
+  } catch (error) {
+    return Promise.reject(getUserFriendlyError(error));
+  }
 
   const feed = await fetchRssFeed(url).catch((err) => {
     return Promise.reject(getUserFriendlyError(err));
@@ -39,6 +43,10 @@ const validateAuthorUsername = (authorUsername) => {
   return typeof authorUsername === "string" && /^@.+/.test(authorUsername);
 };
 
+const getMediumFeedUrl = (authorUsername) => {
+  return encodeURIComponent(`https://medium.com/feed/${authorUsername}`);
+};
+
 const getUserFriendlyError = (error) => {
   if (error instanceof UnknownAuthorError) {
     return new UnknownAuthorError();
@@ -46,7 +54,8 @@ const getUserFriendlyError = (error) => {
     error instanceof FetchError ||
     error instanceof NetworkError ||
     error instanceof HttpError ||
-    error instanceof ParseError
+    error instanceof ParseError ||
+    error instanceof URIError
   ) {
     return new RssError(undefined, { cause: error });
   } else {

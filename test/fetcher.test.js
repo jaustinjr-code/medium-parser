@@ -44,6 +44,7 @@ describe("Fetcher Module", () => {
    *  6. All Origins fetch completes with HTTP failure, return user-friendly error
    *  7. All Origins fetch completes without feed content (null), return user-friendly error
    *  8. All Origins fetch completes without feed content (undefined), return user-friendly error
+   *  9. URL encoding fails, return user-friendly error
    */
 
   // Test getFeed failure #1
@@ -152,6 +153,16 @@ describe("Fetcher Module", () => {
     });
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
+  });
+
+  // Test getFeed failure #9
+  test("fetcher.getFeed URL encoding error from lone surrogate", async () => {
+    const mockValue = new URIError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
+
+    await fetcher.getFeed("@long.surrogate\uD800").catch((err) => {
+      expect(err).toEqual(mockResult);
+    });
   });
 
   // Test getFeed success #1
