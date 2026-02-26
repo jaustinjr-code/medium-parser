@@ -17,6 +17,17 @@ beforeAll(async () => {
 });
 
 describe("Fetcher Module", () => {
+  const dummyValue = {
+    incorrectAccountInput: "incorrect account",
+    notfoundAccountInput: "@notfound.account",
+    correctAccountInput: "@jaustinjr.blog",
+    loneSurrogateInput: "@long.surrogate\uD800",
+    invalidStructureResponse: { invalid: "structure" },
+    validStructureResponse: { contents: "Dummy content" },
+    nullContentResponse: { contents: null },
+    undefinedContentResponse: {},
+  };
+
   // Test modules
   test("modules exist", () => {
     expect(fetcher).toBeDefined();
@@ -51,18 +62,18 @@ describe("Fetcher Module", () => {
   test("fetcher.getFeed handles failure", async () => {
     const mockResult = errors.mockUnknownAuthorError();
 
-    await expect(fetcher.getFeed("incorrect account")).rejects.toEqual(
-      mockResult,
-    );
+    await expect(
+      fetcher.getFeed(dummyValue.incorrectAccountInput),
+    ).rejects.toEqual(mockResult);
   });
 
   // Test getFeed failure #2
-  test("fetcher.getFeed fetch error thrown by helper.fetchRssFeed", async () => {
+  test("should reject with RssError when helper.fetchRssFeed throws a FetchError", async () => {
     const mockValue = errors.mockFetchError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    await fetcher.getFeed("@incorrect.account").catch((err) => {
+    await fetcher.getFeed("@notfound.account").catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
     });
@@ -71,12 +82,12 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #3
-  test("fetcher.getFeed network error thrown by helper.fetchRssFeed", async () => {
+  test("should reject with RssError when helper.fetchRssFeed throws a NetworkError", async () => {
     const mockValue = errors.mockNetworkError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
     });
@@ -85,15 +96,15 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #4
-  test("fetcher.getFeed receives incorrect response structure from helper.fetchRssFeed", async () => {
+  test("should reject with StructureError when helper.fetchRssFeed returns an incorrect response structure", async () => {
     const mockValue = {
-      json: jest.fn().mockResolvedValue({ invalid: "structure" }),
+      json: jest.fn().mockResolvedValue(dummyValue.invalidStructureResponse),
     };
-    const mockActual = { contents: "Valid content" };
+    const mockActual = dummyValue.validStructureResponse;
     const mockResult = errors.mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
     });
 
@@ -102,12 +113,12 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #5
-  test("fetcher.getFeed parse error thrown by helper.fetchRssFeed", async () => {
+  test("should reject with RssError when helper.fetchRssFeed throws a ParseError", async () => {
     const mockValue = errors.mockParseError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
     });
@@ -116,12 +127,12 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #6
-  test("fetcher.getFeed HTTP error thrown by helper.fetchRssFeed", async () => {
+  test("should reject with RssError when helper.fetchRssFeed throws a HttpError", async () => {
     const mockValue = errors.mockHttpError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
     });
@@ -130,12 +141,12 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #7
-  test("fetcher.getFeed content null error thrown by fetcher.getFeed from complete helper.fetchRssFeed", async () => {
-    const mockValue = { contents: null };
+  test("should reject with StructureError when helper.fetchRssFeed returns null content", async () => {
+    const mockValue = dummyValue.nullContentResponse;
     const mockResult = errors.mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
     });
 
@@ -143,12 +154,12 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #8
-  test("fetcher.getFeed content undefined error thrown by fetcher.getFeed from complete helper.fetchRssFeed", async () => {
-    const mockValue = {};
+  test("should reject with StructureError when helper.fetchRssFeed returns undefined content", async () => {
+    const mockValue = dummyValue.undefinedContentResponse;
     const mockResult = errors.mockStructureError();
     helper.fetchRssFeed.mockResolvedValueOnce(mockValue);
 
-    await fetcher.getFeed("@jaustinjr.blog").catch((err) => {
+    await fetcher.getFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
     });
 
@@ -156,7 +167,7 @@ describe("Fetcher Module", () => {
   });
 
   // Test getFeed failure #9
-  test("fetcher.getFeed URL encoding error from lone surrogate", async () => {
+  test("should reject with RssError when fetcher.getFeed throws a URIError from lone surrogate", async () => {
     const mockValue = new URIError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
 
@@ -167,10 +178,10 @@ describe("Fetcher Module", () => {
 
   // Test getFeed success #1
   test("fetcher.getFeed function works", async () => {
-    const mockResult = { contents: "Mocked content" };
+    const mockResult = dummyValue.validStructureResponse;
     helper.fetchRssFeed.mockResolvedValueOnce(mockResult);
 
-    const result = await fetcher.getFeed("@jaustinjr.blog");
+    const result = await fetcher.getFeed(dummyValue.correctAccountInput);
 
     expect(helper.fetchRssFeed).toHaveBeenCalled();
     expect(result).toBeDefined();
