@@ -73,7 +73,7 @@ describe("Fetcher Module", () => {
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
     helper.fetchRssFeed.mockRejectedValueOnce(mockValue);
 
-    await fetcher.getFeed("@notfound.account").catch((err) => {
+    await fetcher.getFeed(dummyValue.notfoundAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
       expect(err.cause).toBe(mockValue);
     });
@@ -171,7 +171,7 @@ describe("Fetcher Module", () => {
     const mockValue = new URIError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
 
-    await fetcher.getFeed("@long.surrogate\uD800").catch((err) => {
+    await fetcher.getFeed(dummyValue.loneSurrogateInput).catch((err) => {
       expect(err).toEqual(mockResult);
     });
   });

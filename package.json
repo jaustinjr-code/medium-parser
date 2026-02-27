@@ -36,9 +36,9 @@
       "default": "./rssFeedHelper.js"
     },
     "./errors": {
-      "types": "./errors.d.ts",
-      "require": "./errors.js",
-      "default": "./errors.js"
+      "types": "./publicErrors.d.ts",
+      "require": "./publicErrors.js",
+      "default": "./publicErrors.js"
     }
   },
   "directories": {
