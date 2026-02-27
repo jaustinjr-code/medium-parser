@@ -12,7 +12,7 @@ export const fetchRssFeed = async (feedUrl) => {
   const res = await fetch(
     `https://api.allorigins.win/get?url=${feedUrl}`,
   ).catch((err) => {
-    throw new NetworkError("Failed to fetch feed. Check your connection.", {
+    throw new NetworkError("Failed to fetch feed due to a network error.", {
       cause: err,
     });
   });
