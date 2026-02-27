@@ -30,11 +30,6 @@
       "require": "./fetcher.js",
       "default": "./fetcher.js"
     },
-    "./rssFeedHelper": {
-      "types": "./rssFeedHelper.d.ts",
-      "require": "./rssFeedHelper.js",
-      "default": "./rssFeedHelper.js"
-    },
     "./errors": {
       "types": "./publicErrors.d.ts",
       "require": "./publicErrors.js",
