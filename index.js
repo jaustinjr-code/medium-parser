@@ -1,6 +1,5 @@
 import * as fetcher from "./fetcher";
-import * as rssFeedHelper from "./rssFeedHelper";
-import * as errors from "./errors";
+import * as errors from "./publicErrors";
 
-export { fetcher, rssFeedHelper, errors };
-export default { fetcher, rssFeedHelper, errors };
+export { fetcher, errors };
+export default { fetcher, errors };
