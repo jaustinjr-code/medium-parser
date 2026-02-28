@@ -20,12 +20,8 @@ export const getFeed = async (authorUsername) => {
     return Promise.reject(new UnknownAuthorError());
   }
 
-  let url;
-  try {
-    url = getMediumFeedUrl(authorUsername);
-  } catch (error) {
-    return Promise.reject(getUserFriendlyError(error));
-  }
+  // URIError thrown if the input contains lone surrogates, call after validation to ensure user-friendly error
+  let url = encodeURIComponent(`https://medium.com/feed/${authorUsername}`);
 
   const feed = await fetchRssFeed(url).catch((err) => {
     return Promise.reject(getUserFriendlyError(err));
@@ -39,12 +35,11 @@ export const getFeed = async (authorUsername) => {
 };
 
 const validateAuthorUsername = (authorUsername) => {
-  // Basic validation to check that it starts with '@' and has more characters
-  return typeof authorUsername === "string" && /^@.+/.test(authorUsername);
-};
-
-const getMediumFeedUrl = (authorUsername) => {
-  return encodeURIComponent(`https://medium.com/feed/${authorUsername}`);
+  // Medium: Username may only use letters, numbers, ".", and "_". 30 character limit and starts with "@".
+  return (
+    typeof authorUsername === "string" &&
+    /^@([a-zA-Z0-9_.]+)$/.test(authorUsername)
+  );
 };
 
 const getUserFriendlyError = (error) => {
