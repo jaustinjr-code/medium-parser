@@ -1,7 +1,7 @@
 {
   "name": "medium-parser",
   "version": "0.0.1",
-  "description": "Medium RSS Feed Fetcher",
+  "description": "The Medium Parser package provides fetcher and parser for Medium RSS feeds. The package retrieves latest posts from a Medium account and extract relevant information such as titles, links, publication dates, and more.",
   "keywords": [
     "medium",
     "rss"
@@ -22,17 +22,17 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "require": "./index.js",
+      "import": "./index.js",
       "default": "./index.js"
     },
     "./fetcher": {
       "types": "./fetcher.d.ts",
-      "require": "./fetcher.js",
+      "import": "./fetcher.js",
       "default": "./fetcher.js"
     },
     "./errors": {
       "types": "./publicErrors.d.ts",
-      "require": "./publicErrors.js",
+      "import": "./publicErrors.js",
       "default": "./publicErrors.js"
     }
   },
