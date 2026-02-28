@@ -1,5 +1,54 @@
 {
+  "name": "medium-parser",
+  "version": "0.0.1",
+  "description": "The Medium Parser package provides fetcher and parser for Medium RSS feeds. The package retrieves latest posts from a Medium account and extract relevant information such as titles, links, publication dates, and more.",
+  "keywords": [
+    "medium",
+    "rss"
+  ],
+  "homepage": "https://github.com/jaustinjr-code/medium-parser#readme",
+  "bugs": {
+    "url": "https://github.com/jaustinjr-code/medium-parser/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jaustinjr-code/medium-parser.git"
+  },
+  "license": "ISC",
+  "author": "jaustinjr",
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./fetcher": {
+      "types": "./fetcher.d.ts",
+      "import": "./fetcher.js",
+      "default": "./fetcher.js"
+    },
+    "./errors": {
+      "types": "./publicErrors.d.ts",
+      "import": "./publicErrors.js",
+      "default": "./publicErrors.js"
+    }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
   "dependencies": {
     "rss-parser": "^3.13.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.28.6",
+    "@types/jest": "^30.0.0",
+    "babel-jest": "^30.2.0",
+    "jest": "^30.2.0"
   }
 }
