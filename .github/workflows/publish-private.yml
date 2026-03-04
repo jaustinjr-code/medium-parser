@@ -1,0 +1,28 @@
+# https://github.com/marketplace/actions/npm-publish
+name: Publish Package to Private NPM Registry
+
+on:
+  push:
+    branches: main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+      - run: npm ci
+      - run: npm test
+      - uses: JS-DevTools/npm-publish@v4
+        id: publish
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          registry: "https://registry.npmjs.org/"
+
+      - if: ${{ steps.publish.outputs.type }}
+        run: echo "${{ steps.publish.outputs.date }} - Published version ${{ steps.publish.outputs.version }} to Private NPM registry."
