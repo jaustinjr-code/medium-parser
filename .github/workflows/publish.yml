@@ -1,0 +1,26 @@
+# https://github.com/marketplace/actions/npm-publish
+name: Publish Package to NPM Registry
+
+on:
+  push:
+    tags: v*
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          check-latest: true
+      - run: npm ci
+      - run: npm test
+      - uses: JS-DevTools/npm-publish@v4
+        id: publish
+
+      - if: ${{ steps.publish.outputs.type }}
+        run: echo "${{ steps.publish.outputs.date }} - Published version ${{ steps.publish.outputs.version }} to NPM registry."
