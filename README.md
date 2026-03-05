@@ -8,13 +8,13 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Installation](#installation)
-  - [Usage](#usage)
-    - [Basic Example](#basic-example)
-    - [Handling Errors](#handling-errors)
   - [API Reference](#api-reference)
     - [`getFeed(authorUsername)`](#getfeedauthorusername)
     - [Error Classes](#error-classes)
   - [Dependencies](#dependencies)
+  - [Usage](#usage)
+    - [Example](#example)
+    - [Handling Errors](#handling-errors)
   - [Limitations](#limitations)
   - [License](#license)
 
@@ -22,10 +22,10 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
 
 ## Introduction
 
-`medium-parser` that provides a fetch of the Medium author's RSS feed by username and returns the parsed response in JSON. The package is compatible with ESM, CommonJS, and TypeScript.
+`medium-parser` provides a fetch of the Medium author's RSS feed by username and returns the parsed response in JSON. The package is compatible with ESM, CommonJS, and TypeScript.
 
 > [!NOTE]
-> The package uses [AllOrigins](https://allorigins.win/) to bypass CORS restrictions. If AllOrigins is unavailable, requests will fail.
+> The package uses [AllOrigins](https://allorigins.win/) to bypass Medium's CORS restrictions. If AllOrigins is unavailable, requests will fail.
 
 ## Installation
 
@@ -33,20 +33,51 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
 npm install medium-parser
 ```
 
+## API Reference
+
+### `getFeed(authorUsername)`
+
+- **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
+- **Returns:** `Promise<Object>` resolving with the parsed RSS feed.
+- **Throws:** One of the custom public error classes listed below.
+
+### Error Classes
+
+The package exports the following errors:
+
+- `UnknownAuthorError` – validation failure for username. (public)
+- `StructureError` – RSS response didn't have expected shape. (public)
+- `RssError` – generic wrapper for network/HTTP/parse errors. (public)
+  - `NetworkError` – network request failed.
+  - `HttpError` – response returned non-OK status.
+  - `ParseError` – failure parsing JSON.
+  - `FetchError` – low-level fetch failure.
+
+> [!TIP]
+> `RssError` is usually thrown due to a `NetworkError` and can often be resolved by initiating a retry request. A retry request does not consistently resolve the other wrapped errors, in which case, a user-friendly UX is recommended to address the error.
+
+## Dependencies
+
+This library has no runtime dependencies other than the `fetch` API (available in Node.js 18+ or with a polyfill).
+
+> [!IMPORTANT]
+> Make sure `fetch` is available in your environment. For older Node versions, install a polyfill like [`node-fetch`](https://www.npmjs.com/package/node-fetch) and set `global.fetch`.
+
 ## Usage
 
-### Basic Example
+### Example
 
 ```js
 import mediumFetcher from 'medium-parser/fetcher';
 
 async function main() {
-  try {
-    const feed = await mediumFetcher.getFeed('@jaustinjr.blog');
+const feed = await mediumFetcher.getFeed('@jaustinjr.blog')
+  .then(feed => {
     console.log(feed.contents);
-  } catch (err) {
+  })
+  .catch(err => {
     console.error('Failed to fetch feed:', err);
-  }
+  });
 }
 
 main();
@@ -67,39 +98,12 @@ try {
   } else if (err instanceof errors.StructureError) {
     // response missing expected fields
   } else if (err instanceof errors.RssError) {
-    // network/parse/http error wrapped
+    // network/parse/http error wrapped, send a retry request
   } else {
     // other unexpected error
   }
 }
 ```
-
-## API Reference
-
-### `getFeed(authorUsername)`
-
-- **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
-- **Returns:** `Promise<Object>` resolving with the parsed RSS feed.
-- **Throws:** One of the custom error classes listed below.
-
-### Error Classes
-
-The package exports the following errors:
-
-- `UnknownAuthorError` – validation failure for username.
-- `StructureError` – RSS response didn't have expected shape.
-- `RssError` – generic wrapper for network/HTTP/parse errors.
-  - `NetworkError` – network request failed.
-  - `HttpError` – response returned non-OK status.
-  - `ParseError` – failure parsing JSON.
-  - `FetchError` – low-level fetch failure.
-
-## Dependencies
-
-This library has no runtime dependencies other than the `fetch` API (available in Node.js 18+ or with a polyfill).
-
-> [!IMPORTANT]
-> Make sure `fetch` is available in your environment. For older Node versions, install a polyfill like [`node-fetch`](https://www.npmjs.com/package/node-fetch) and set `global.fetch`.
 
 ## Limitations
 
@@ -111,7 +115,3 @@ This library has no runtime dependencies other than the `fetch` API (available i
 ## License
 
 `medium-parser` is licensed under the [MIT License](LICENSE).
-
----
-
-Happy parsing! 👋
