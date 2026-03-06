@@ -52,7 +52,7 @@ describe("Fetcher Module", () => {
    * use:
    *  - getFeed(authorUsername)
    * success:
-   *  1. parsed content is returned
+   *  1. feed and content is returned
    * failure:
    *  1. Invalid author username, return user-friendly error
    *  2. RSS feed fails to locate user account, return user-friendly error
