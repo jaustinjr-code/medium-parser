@@ -1,4 +1,8 @@
 # Node Gitignore source https://github.com/github/gitignore/blob/main/Node.gitignore
+
+# Custom ignores
+docs/internal
+
 # Logs
 logs
 *.log
