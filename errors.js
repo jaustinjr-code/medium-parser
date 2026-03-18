@@ -62,7 +62,7 @@ export class ParseError extends Error {
  * @param {*} [options.cause] - Underlying cause of the error.
  */
 export class StructureError extends Error {
-  constructor(message = "Invalid content structure.", options) {
+  constructor(message = "Invalid feed structure.", options) {
     super(message, options);
     this.name = "StructureError";
     this.options = options;
