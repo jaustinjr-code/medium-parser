@@ -45,4 +45,5 @@ export const parseRssFeed = async (feed) => {
 
 export default {
   fetchRssFeed,
+  parseRssFeed,
 };
