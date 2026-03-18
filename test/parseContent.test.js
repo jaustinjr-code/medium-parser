@@ -42,6 +42,18 @@ describe("Parser Module: parseContent", () => {
    *    - non-string content
    *    - invalid RSS content structure
    *  2. content parsing fails, return user-friendly error
+   *  3. invalid parsed content structure, return user-friendly error
+   *    - items content
+   *    - image content
+   *    - article title content
+   *    - article description content
+   *    - article SEO content
+   *    - article encoded content, content:encoded
+   *    - category content
+   *    - topic content
+   *    - publish date content
+   *    - link content
+   *    - guide link content
    */
 
   // Test parseContent success #1
@@ -76,5 +88,19 @@ describe("Parser Module: parseContent", () => {
     await expect(parser.parseContent("Invalid RSS content")).rejects.toEqual(
       mockResult,
     );
+  });
+
+  // Test parseFeed failure #3
+  test("should reject with StructureError for invalid parsed content structure", async () => {
+    const mockResult = errors.mockStructureError();
+
+    // TODO: fix error "TypeError: Cannot assign to read only property 'parseContent' of object '[object Module]'"
+    // const spy = jest.spyOn(parser, "parseContent");
+    // spy.mockResolvedValueOnce(dummyValue.invalidParsedResult.missingItems);
+    // spy.mockResolvedValueOnce(dummyValue.invalidParsedResult.missingLink);
+
+    await expect(
+      parser.parseContent(dummyValue.correctAccountInput),
+    ).rejects.toEqual(mockResult);
   });
 });
