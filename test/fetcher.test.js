@@ -11,7 +11,7 @@ let errors;
 
 // Dynamic imports
 beforeAll(async () => {
-  helper = await import("../rssFeedHelper.js");
+  helper = await import("../rssHelper.js");
   fetcher = await import("../fetcher.js");
   errors = await import("./util/mockErrors.js");
 });
