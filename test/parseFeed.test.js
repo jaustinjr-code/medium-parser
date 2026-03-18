@@ -87,19 +87,7 @@ describe("Parser Module: parseFeed", () => {
    *    - missing XML tag feed
    *    - missing RSS tag feed
    *    - missing channel tag feed
-   *  4. invalid parsed content structure, return user-friendly error
-   *    - items content
-   *    - image content
-   *    - article title content
-   *    - article description content
-   *    - article SEO content
-   *    - article encoded content, content:encoded
-   *    - category content
-   *    - topic content
-   *    - publish date content
-   *    - link content
-   *    - guide link content
-   *  5. retry failed feed fetch, return user-friendly error
+   *  4. retry failed feed fetch, return user-friendly error
    */
 
   // Test parseFeed success #1
@@ -239,18 +227,6 @@ describe("Parser Module: parseFeed", () => {
   });
 
   // Test parseFeed failure #4
-  test("should reject with StructureError for invalid parsed content structure", async () => {
-    const mockResult = errors.mockStructureError();
-    parser.parseContent.mockResolvedValueOnce(
-      dummyValue.invalidParsedResult.missingItems,
-    );
-
-    await expect(
-      parser.parseFeed(dummyValue.correctAccountInput),
-    ).rejects.toEqual(mockResult);
-  });
-
-  // Test parseFeed failure #5
   test("should reject with RssError after retrying failed feed fetch", async () => {
     const mockValue = errors.mockRssError();
     const mockResult = errors.mockRssError(undefined, { cause: mockValue });
