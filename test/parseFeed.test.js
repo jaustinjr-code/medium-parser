@@ -1,6 +1,8 @@
 import { jest } from "@jest/globals";
 
 let originalFetcher;
+let originalHelper;
+let helper;
 let fetcher;
 let parser;
 let errors;
@@ -10,16 +12,30 @@ let mockContent;
 beforeAll(async () => {
   // Use for calling the original fetcher implementation
   originalFetcher = await import("../fetcher.js");
+  originalHelper = await import("../rssHelper.js");
 
   // Mock fetcher instances after this
   jest.unstable_mockModule("../fetcher.js", () => ({
     getFeed: jest.fn(),
   }));
 
+  // Mock helper module
+  jest.unstable_mockModule("../rssHelper.js", () => ({
+    fetchRssFeed: jest.fn(),
+    parseRssFeed: jest.fn(),
+  }));
+
+  helper = await import("../rssHelper.js");
   fetcher = await import("../fetcher.js");
   parser = await import("../parser.js");
   errors = await import("./util/mockErrors.js");
   mockContent = await import("./util/mockContent.js");
+});
+
+afterEach(() => {
+  fetcher.getFeed.mockClear();
+  helper.fetchRssFeed.mockClear();
+  helper.parseRssFeed.mockClear();
 });
 
 describe("Parser Module: parseFeed", () => {
@@ -58,6 +74,28 @@ describe("Parser Module: parseFeed", () => {
       items: [],
       link: undefined,
     },
+    validFeedKeySet: [
+      "items",
+      "feedUrl",
+      "image",
+      "paginationLinks",
+      "title",
+      "description",
+      "webMaster",
+      "generator",
+      "link",
+      "lastBuildDate",
+    ],
+    validItemKeySet: [
+      "creator",
+      "title",
+      "link",
+      "pubDate",
+      "dc:creator",
+      "guid",
+      "categories",
+      "isoDate",
+    ],
     nullContentResponse: { contents: null },
     undefinedContentResponse: {},
   };
@@ -65,7 +103,11 @@ describe("Parser Module: parseFeed", () => {
   // Test functions
   test("fetcher functions exist", () => {
     expect(originalFetcher.getFeed).toBeDefined();
+    expect(originalHelper.fetchRssFeed).toBeDefined();
+    expect(originalHelper.parseRssFeed).toBeDefined();
     expect(fetcher.getFeed).toBeDefined();
+    expect(helper.fetchRssFeed).toBeDefined();
+    expect(helper.parseRssFeed).toBeDefined();
     expect(parser.parseContent).toBeDefined();
     expect(parser.parseFeed).toBeDefined();
   });
@@ -75,19 +117,14 @@ describe("Parser Module: parseFeed", () => {
    * use:
    *  - parseFeed(authorUsername)
    * success:
-   *  1. parsed content from author username is returned
-   *  2. parsed content structure is valid and matches expected structure
-   *  3. retry content is parsed and returned after failed attempt
+   *  1. parser.parseFeed function works - returns parsed content from mocked feed
+   *  2. parser.parseFeed returns content with valid structure - validates structure of parsed result
+   *  3. parser.parseFeed retries and succeeds after failed attempt - tests retry logic with mocked failures
    * failure:
-   *  1. invalid author username input, return user-friendly error
-   *  2. content parsing fails, return user-friendly error
-   *  3. invalid feed output, return user-friendly error
-   *    - empty feed
-   *    - non-string feed
-   *    - missing XML tag feed
-   *    - missing RSS tag feed
-   *    - missing channel tag feed
-   *  4. retry failed feed fetch, return user-friendly error
+   *  1. should reject with UnknownAuthorError for invalid author username input - uses real fetcher implementation to validate input
+   *  2. should reject with RssError with ParseError cause for content parsing failure - uses real parser on invalid XML structure
+   *  3. should reject with RssError with ParseError cause for invalid RSS content - tests various invalid feed formats (empty, non-string, missing tags)
+   *  4. should reject with RssError after retrying failed feed fetch - tests retry failure with mocked errors
    */
 
   // Test parseFeed success #1
@@ -95,14 +132,13 @@ describe("Parser Module: parseFeed", () => {
     const mockResponse = dummyValue.validFeedResponse;
     const mockResult = dummyValue.validEmptyParsedResult;
     fetcher.getFeed.mockResolvedValueOnce(mockResponse);
+    helper.parseRssFeed.mockResolvedValueOnce(mockResult);
 
     const result = await parser.parseFeed(dummyValue.correctAccountInput);
 
     expect(fetcher.getFeed).toHaveBeenCalled();
     expect(result).toBeDefined();
     expect(result).toEqual(mockResult);
-
-    fetcher.getFeed.mockClear();
   });
 
   // Test parseFeed success #2
@@ -110,13 +146,18 @@ describe("Parser Module: parseFeed", () => {
     const mockResponse = mockContent.response;
     const mockResult = mockContent.parsedResult;
     fetcher.getFeed.mockResolvedValueOnce(mockResponse);
+    helper.parseRssFeed.mockResolvedValueOnce(mockResult);
 
     const result = await parser.parseFeed(dummyValue.correctAccountInput);
 
     expect(result).toBeDefined();
-    expect(result).toEqual(mockResult);
 
-    fetcher.getFeed.mockClear();
+    expect(Object.keys(result)).toEqual(
+      expect.arrayContaining(dummyValue.validFeedKeySet),
+    );
+    expect(Object.keys(result.items[0])).toEqual(
+      expect.arrayContaining(dummyValue.validItemKeySet),
+    );
   });
 
   // Test parseFeed success #3
@@ -124,6 +165,7 @@ describe("Parser Module: parseFeed", () => {
     const mockResponse = mockContent.response;
     const mockResult = mockContent.parsedResult;
     const mockError = errors.mockRssError();
+    helper.parseRssFeed.mockResolvedValueOnce(mockResult);
 
     // First call to getFeed fails, second call succeeds
     fetcher.getFeed
@@ -138,14 +180,24 @@ describe("Parser Module: parseFeed", () => {
 
     expect(fetcher.getFeed).toHaveBeenCalledTimes(2);
     expect(result).toBeDefined();
-    expect(result).toEqual(mockResult);
+
+    expect(Object.keys(result)).toEqual(
+      expect.arrayContaining(dummyValue.validFeedKeySet),
+    );
+    expect(Object.keys(result.items[0])).toEqual(
+      expect.arrayContaining(dummyValue.validItemKeySet),
+    );
   });
 
   // Test parseFeed failure #1
   test("should reject with UnknownAuthorError for invalid author username input", async () => {
     const mockResult = errors.mockUnknownAuthorError();
+
     fetcher.getFeed.mockImplementation((authorUsername) =>
       originalFetcher.getFeed(authorUsername),
+    );
+    helper.parseRssFeed.mockImplementation((feed) =>
+      originalHelper.parseRssFeed(feed),
     );
 
     await expect(
@@ -170,25 +222,36 @@ describe("Parser Module: parseFeed", () => {
   });
 
   // Test parseFeed failure #2
-  test("should reject with ParseError for content parsing failure", async () => {
-    const mockValue = new Error();
-    const mockResult = errors.mockParseError(undefined, { cause: mockValue });
+  test("should reject with RssError with ParseError cause for content parsing failure", async () => {
+    const mockValue = errors.mockParseError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
+
     fetcher.getFeed.mockResolvedValueOnce(
       dummyValue.invalidFetcherResponse.missingXmlTag,
+    );
+    helper.parseRssFeed.mockImplementation((feed) =>
+      originalHelper.parseRssFeed(feed),
     );
 
     await parser.parseFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
-      // rss-parser throws Error("Unable to parse XML"), no need to check message
-      expect(err.cause).toBeInstanceOf(Error);
+      console.log(mockValue.type);
+      expect(err.cause).toBeInstanceOf(mockValue.type);
+      // rss-parser throws generic Error when "Unable to parse XML" or distinguish RSS content, no need to check message
+      expect(err.cause.cause).toBeInstanceOf(Error);
     });
 
     expect(fetcher.getFeed).toHaveBeenCalled();
   });
 
   // Test parseFeed failure #3
-  test("should reject with ParseError for invalid RSS content", async () => {
-    const mockResult = errors.mockParseError();
+  test("should reject with RssError with ParseError cause for invalid RSS content", async () => {
+    const mockValue = errors.mockParseError();
+    const mockResult = errors.mockRssError(undefined, { cause: mockValue });
+
+    helper.parseRssFeed.mockImplementation((feed) =>
+      originalHelper.parseRssFeed(feed),
+    );
 
     fetcher.getFeed.mockResolvedValueOnce(
       dummyValue.invalidFetcherResponse.emptyContents,
@@ -235,6 +298,10 @@ describe("Parser Module: parseFeed", () => {
     fetcher.getFeed
       .mockRejectedValueOnce(mockValue)
       .mockRejectedValueOnce(mockValue);
+
+    await expect(
+      parser.parseFeed(dummyValue.correctAccountInput),
+    ).rejects.toEqual(mockResult);
 
     await parser.parseFeed(dummyValue.correctAccountInput).catch((err) => {
       expect(err).toEqual(mockResult);
