@@ -117,14 +117,19 @@ describe("Parser Module: parseFeed", () => {
    * use:
    *  - parseFeed(authorUsername)
    * success:
-   *  1. parser.parseFeed function works - returns parsed content from mocked feed
-   *  2. parser.parseFeed returns content with valid structure - validates structure of parsed result
-   *  3. parser.parseFeed retries and succeeds after failed attempt - tests retry logic with mocked failures
+   *  1. parsed content from author username is returned
+   *  2. parsed content structure is valid and matches expected structure
+   *  3. retry content is parsed and returned after failed attempt
    * failure:
-   *  1. should reject with UnknownAuthorError for invalid author username input - uses real fetcher implementation to validate input
-   *  2. should reject with RssError with ParseError cause for content parsing failure - uses real parser on invalid XML structure
-   *  3. should reject with RssError with ParseError cause for invalid RSS content - tests various invalid feed formats (empty, non-string, missing tags)
-   *  4. should reject with RssError after retrying failed feed fetch - tests retry failure with mocked errors
+   *  1. invalid author username input, return user-friendly error
+   *  2. content parsing fails, return user-friendly error
+   *  3. invalid feed output, return user-friendly error
+   *    - empty feed
+   *    - non-string feed
+   *    - missing XML tag feed
+   *    - missing RSS tag feed
+   *    - missing channel tag feed
+   *  4. retry failed feed fetch, return user-friendly error
    */
 
   // Test parseFeed success #1
@@ -237,7 +242,7 @@ describe("Parser Module: parseFeed", () => {
       expect(err).toEqual(mockResult);
       console.log(mockValue.type);
       expect(err.cause).toBeInstanceOf(mockValue.type);
-      // rss-parser throws generic Error when "Unable to parse XML" or distinguish RSS content, no need to check message
+      // rss-parser throws generic Error when "Unable to parse XML" or it can't distinguish RSS content, no need to check message
       expect(err.cause.cause).toBeInstanceOf(Error);
     });
 
