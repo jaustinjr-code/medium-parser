@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 
 // Mock helper module
-jest.unstable_mockModule("../rssFeedHelper.js", () => ({
+jest.unstable_mockModule("../rssHelper.js", () => ({
   fetchRssFeed: jest.fn(),
 }));
 
