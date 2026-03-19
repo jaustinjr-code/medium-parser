@@ -10,7 +10,7 @@ let mockContent;
 
 // Dynamic imports
 beforeAll(async () => {
-  // Use for calling the original fetcher implementation
+  // Use for calling the original implementation
   originalFetcher = await import("../fetcher.js");
   originalHelper = await import("../rssHelper.js");
 

@@ -1,19 +1,27 @@
 import { jest } from "@jest/globals";
 
-// Mock helper module
-jest.unstable_mockModule("../fetcher.js", () => ({
-  getFeed: jest.fn(),
-}));
-
+let originalFetcher;
 let fetcher;
 let parser;
 let errors;
 
 // Dynamic imports
 beforeAll(async () => {
+  // Use for calling the original implementation
+  originalFetcher = await import("../fetcher.js");
+
+  // Mock fetcher instances after this
+  jest.unstable_mockModule("../fetcher.js", () => ({
+    getFeed: jest.fn(),
+  }));
+
   fetcher = await import("../fetcher.js");
   parser = await import("../parser.js");
   errors = await import("./util/mockErrors.js");
+});
+
+afterEach(() => {
+  fetcher.getFeed.mockClear();
 });
 
 describe("Parser Module: parseContent", () => {
