@@ -4,6 +4,7 @@ let originalFetcher;
 let fetcher;
 let parser;
 let errors;
+let mockContent;
 
 // Dynamic imports
 beforeAll(async () => {
@@ -18,6 +19,7 @@ beforeAll(async () => {
   fetcher = await import("../fetcher.js");
   parser = await import("../parser.js");
   errors = await import("./util/mockErrors.js");
+  mockContent = await import("./util/mockContent.js");
 });
 
 afterEach(() => {
@@ -27,7 +29,7 @@ afterEach(() => {
 describe("Parser Module: parseContent", () => {
   const dummyValue = {
     correctAccountInput: "@jaustinjr.blog",
-    validStructureResponse: { contents: "Dummy content" },
+    validStructureResponse: { items: [{ images: [] }] },
   };
 
   // Test functions
@@ -67,11 +69,11 @@ describe("Parser Module: parseContent", () => {
   // Test parseContent success #1
   test("parser.parseContent function works", async () => {
     const mockResult = dummyValue.validStructureResponse;
+    const mockValue = mockContent.parsedResult;
+
     fetcher.getFeed.mockResolvedValueOnce(mockResult);
 
-    const result = await parser.parseContent(
-      dummyValue.validStructureResponse.contents,
-    );
+    const result = await parser.parseContent(mockValue);
 
     expect(result).toBeDefined();
     expect(result).toEqual(mockResult);
