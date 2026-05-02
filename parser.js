@@ -33,9 +33,9 @@ export const parseContent = (parsedFeed) => {
 };
 
 const parseImages = (content) => {
+  if (typeof content !== "string") return [];
   const sourceImageRegex = /(?<=src\s*=\s*["'])([^"']+)(?=["'])/g;
-  let matches = content.match(sourceImageRegex);
-  return matches;
+  return content.match(sourceImageRegex) || [];
 };
 
 export default { parseFeed, parseContent };
