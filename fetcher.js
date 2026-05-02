@@ -38,7 +38,7 @@ const validateAuthorUsername = (authorUsername) => {
   // Medium: Username may only use letters, numbers, ".", and "_". 30 character limit and starts with "@".
   return (
     typeof authorUsername === "string" &&
-    /^@([a-zA-Z0-9_.]+)$/.test(authorUsername)
+    /^@([a-zA-Z0-9_.]{1,30})$/.test(authorUsername)
   );
 };
 

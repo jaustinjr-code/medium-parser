@@ -25,6 +25,7 @@ describe("Fetcher Module", () => {
       emptyString: "",
       nonString: 12345,
       badCharacters: "@#$%^&*/\\[]{}?`~()!-+",
+      tooManyCharacters: "@" + "a".repeat(31),
     },
     notfoundAccountInput: "@notfound.account",
     correctAccountInput: "@jaustinjr.blog",
@@ -99,6 +100,10 @@ describe("Fetcher Module", () => {
 
     await expect(
       fetcher.getFeed(dummyValue.incorrectUsernameInput.badCharacters),
+    ).rejects.toEqual(mockResult);
+
+    await expect(
+      fetcher.getFeed(dummyValue.incorrectUsernameInput.tooManyCharacters),
     ).rejects.toEqual(mockResult);
   });
 
