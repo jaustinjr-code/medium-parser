@@ -1,9 +1,4 @@
-<<<<<<< Updated upstream:rssFeedHelper.js
-import { NetworkError, HttpError, ParseError } from "./errors";
-=======
 import { NetworkError, HttpError, ParseError } from "./errors.js";
-import Parser from "rss-parser";
->>>>>>> Stashed changes:rssHelper.js
 
 /**
  * Fetches an RSS feed from the given URL.
