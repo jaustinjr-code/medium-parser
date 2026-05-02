@@ -21,6 +21,8 @@ jobs:
       - run: npm test
       - uses: JS-DevTools/npm-publish@v4
         id: publish
+        with:
+          token: ${{ secrets.NPM_TOKEN}}
 
       - if: ${{ steps.publish.outputs.type }}
         run: echo "${{ steps.publish.outputs.date }} - Published version ${{ steps.publish.outputs.version }} to NPM registry."
