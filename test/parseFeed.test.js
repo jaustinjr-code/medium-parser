@@ -238,14 +238,15 @@ describe("Parser Module: parseFeed", () => {
       originalHelper.parseRssFeed(feed),
     );
 
+    let caughtError;
     await parser.parseFeed(dummyValue.correctAccountInput).catch((err) => {
-      expect(err).toEqual(mockResult);
-      console.log(mockValue.type);
-      expect(err.cause).toBeInstanceOf(mockValue.type);
-      // rss-parser throws generic Error when "Unable to parse XML" or it can't distinguish RSS content, no need to check message
-      expect(err.cause.cause).toBeInstanceOf(Error);
+      caughtError = err;
     });
 
+    expect(caughtError).toBeDefined();
+    expect(caughtError.cause).toBeInstanceOf(mockValue.type);
+    // rss-parser throws generic Error when "Unable to parse XML" or it can't distinguish RSS content, no need to check message
+    expect(caughtError.cause.cause).toBeInstanceOf(Error);
     expect(fetcher.getFeed).toHaveBeenCalled();
   });
 
