@@ -1,5 +1,5 @@
 import { RssError, UnknownAuthorError } from "./errors.js";
-import { getFeed } from "./fetcher";
+import { getFeed } from "./fetcher.js";
 import { parseRssFeed } from "./rssHelper.js";
 
 export const parseFeed = async (authorUsername) => {

@@ -1,4 +1,4 @@
-import { NetworkError, HttpError, ParseError } from "./errors";
+import { NetworkError, HttpError, ParseError } from "./errors.js";
 import Parser from "rss-parser";
 
 /**

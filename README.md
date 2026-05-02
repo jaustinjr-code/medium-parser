@@ -68,16 +68,19 @@ This library has no runtime dependencies other than the `fetch` API (available i
 ### Example
 
 ```js
-import mediumFetcher from 'medium-parser/fetcher';
+import mediumFetcher from "medium-parser/fetcher";
 
 async function main() {
-const feed = await mediumFetcher.getFeed('@jaustinjr.blog')
-  .then(feed => {
-    console.log(feed.contents);
-  })
-  .catch(err => {
-    console.error('Failed to fetch feed:', err);
-  });
+  const feed = await mediumFetcher
+    .getFeed("@jaustinjr.blog")
+    .then((feed) => {
+      console.log(feed.contents);
+    })
+    .catch((err) => {
+      console.error("Failed to fetch feed:", err);
+    });
+
+  // Use feed data as needed
 }
 
 main();
@@ -88,10 +91,10 @@ main();
 The library exports several error classes, allowing callers to distinguish between different failure modes, three of which are public:
 
 ```js
-import { fetcher, errors } from 'medium-parser';
+import { fetcher, errors } from "medium-parser";
 
 try {
-  await fetcher.getFeed('invalid'); // will throw UnknownAuthorError
+  await fetcher.getFeed("invalid"); // will throw UnknownAuthorError
 } catch (err) {
   if (err instanceof errors.UnknownAuthorError) {
     // username validation failed or username was not found
