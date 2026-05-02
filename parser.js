@@ -9,7 +9,6 @@ export const parseFeed = async (authorUsername) => {
   });
 
   const parsedFeed = await parseRssFeed(feed).catch((err) => {
-    console.log(err);
     return Promise.reject(new RssError(undefined, { cause: err }));
   });
 
