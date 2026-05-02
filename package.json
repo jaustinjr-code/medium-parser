@@ -1,6 +1,6 @@
 {
   "name": "medium-parser",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "The Medium Parser package provides fetcher and parser for Medium RSS feeds. The package retrieves latest posts from a Medium account and extract relevant information such as titles, links, publication dates, and more.",
   "keywords": [
     "medium",
