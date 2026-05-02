@@ -8,17 +8,9 @@ export const parseFeed = async (authorUsername) => {
     return Promise.reject(new RssError(undefined, { cause: err }));
   });
 
-  // debug
-  console.log("feed from getFeed:", feed);
-
   const parsedFeed = await parseRssFeed(feed).catch((err) => {
     console.log(err);
     return Promise.reject(new RssError(undefined, { cause: err }));
-  });
-
-  // debug
-  parsedFeed.items.forEach((item) => {
-    console.log(item);
   });
 
   const parsedContent = parseContent(parsedFeed);
@@ -26,9 +18,7 @@ export const parseFeed = async (authorUsername) => {
   return parsedContent;
 };
 
-export const parseContent = async (parsedFeed) => {
-  console.log("parsedFeed:", parsedFeed);
-
+export const parseContent = (parsedFeed) => {
   const parsedContent = {
     ...parsedFeed,
     items: parsedFeed.items.map((item) => {
@@ -38,8 +28,6 @@ export const parseContent = async (parsedFeed) => {
       };
     }),
   };
-
-  console.log("parsedContent:", parsedContent);
 
   return parsedContent;
 };
