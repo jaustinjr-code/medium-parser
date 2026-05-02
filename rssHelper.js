@@ -1,4 +1,10 @@
-import { NetworkError, HttpError, ParseError } from "./errors.js";
+import {
+  NetworkError,
+  HttpError,
+  ParseError,
+  StructureError,
+} from "./errors.js";
+import Parser from "rss-parser";
 
 /**
  * Fetches an RSS feed from the given URL.
@@ -30,6 +36,21 @@ export const fetchRssFeed = async (feedUrl) => {
   });
 };
 
+export const parseRssFeed = async (feed) => {
+  const rssParser = new Parser();
+
+  const parsedFeed = await rssParser.parseString(feed.contents).catch((err) => {
+    return Promise.reject(new ParseError(err.message, { cause: err }));
+  });
+
+  if (!(parsedFeed && parsedFeed.items && Array.isArray(parsedFeed.items))) {
+    return Promise.reject(new StructureError("Invalid parsed feed structure"));
+  }
+
+  return parsedFeed;
+};
+
 export default {
   fetchRssFeed,
+  parseRssFeed,
 };

@@ -30,6 +30,11 @@
       "import": "./fetcher.js",
       "default": "./fetcher.js"
     },
+    "./parser": {
+      "types": "./parser.d.ts",
+      "import": "./parser.js",
+      "default": "./parser.js"
+    },
     "./errors": {
       "types": "./publicErrors.d.ts",
       "import": "./publicErrors.js",

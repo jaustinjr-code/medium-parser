@@ -1,7 +1,7 @@
 import { jest } from "@jest/globals";
 
 // Mock helper module
-jest.unstable_mockModule("../rssFeedHelper.js", () => ({
+jest.unstable_mockModule("../rssHelper.js", () => ({
   fetchRssFeed: jest.fn(),
 }));
 
@@ -11,7 +11,7 @@ let errors;
 
 // Dynamic imports
 beforeAll(async () => {
-  helper = await import("../rssFeedHelper.js");
+  helper = await import("../rssHelper.js");
   fetcher = await import("../fetcher.js");
   errors = await import("./util/mockErrors.js");
 });
@@ -52,7 +52,7 @@ describe("Fetcher Module", () => {
    * use:
    *  - getFeed(authorUsername)
    * success:
-   *  1. parsed content is returned
+   *  1. feed and content is returned
    * failure:
    *  1. Invalid author username, return user-friendly error
    *  2. RSS feed fails to locate user account, return user-friendly error

@@ -7,7 +7,7 @@ import {
   StructureError,
   FetchError,
 } from "./errors.js";
-import { fetchRssFeed } from "./rssFeedHelper.js";
+import { fetchRssFeed } from "./rssHelper.js";
 
 /**
  * Uses All Origins to fetch a Medium RSS feed for a given author.
