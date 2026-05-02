@@ -1,10 +1,10 @@
-# medium-parser
+# medium-rss-feed-parser
 
 A lightweight Node.js library for fetching and parsing Medium RSS feeds using the AllOrigins proxy.
 
 ## Table of Contents
 
-- [medium-parser](#medium-parser)
+- [medium-rss-feed-parser](#medium-rss-feed-parser)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Installation](#installation)
@@ -22,7 +22,7 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
 
 ## Introduction
 
-`medium-parser` provides a fetch of the Medium author's RSS feed by username and returns the parsed response in JSON. The package is compatible with ESM, CommonJS, and TypeScript.
+`medium-rss-feed-parser` provides a fetch of the Medium author's RSS feed by username and returns the parsed response in JSON. The package is compatible with ESM, CommonJS, and TypeScript.
 
 > [!NOTE]
 > The package uses [AllOrigins](https://allorigins.win/) to bypass Medium's CORS restrictions. If AllOrigins is unavailable, requests will fail.
@@ -30,7 +30,7 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
 ## Installation
 
 ```bash
-npm install medium-parser
+npm install medium-rss-feed-parser
 ```
 
 ## API Reference
@@ -68,7 +68,7 @@ This library has no runtime dependencies other than the `fetch` API (available i
 ### Example
 
 ```js
-import mediumFetcher from "medium-parser/fetcher";
+import mediumFetcher from "medium-rss-feed-parser/fetcher";
 
 async function main() {
   const feed = await mediumFetcher
@@ -91,7 +91,7 @@ main();
 The library exports several error classes, allowing callers to distinguish between different failure modes, three of which are public:
 
 ```js
-import { fetcher, errors } from "medium-parser";
+import { fetcher, errors } from "medium-rss-feed-parser";
 
 try {
   await fetcher.getFeed("invalid"); // will throw UnknownAuthorError
@@ -117,4 +117,4 @@ try {
 
 ## License
 
-`medium-parser` is licensed under the [MIT License](LICENSE).
+`medium-rss-feed-parser` is licensed under the [MIT License](LICENSE).
