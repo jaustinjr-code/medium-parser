@@ -1,18 +1,18 @@
 {
-  "name": "medium-parser",
-  "version": "1.0.0",
+  "name": "medium-rss-feed-parser",
+  "version": "1.0.1",
   "description": "The Medium Parser package provides fetcher and parser for Medium RSS feeds. The package retrieves latest posts from a Medium account and extract relevant information such as titles, links, publication dates, and more.",
   "keywords": [
     "medium",
     "rss"
   ],
-  "homepage": "https://github.com/jaustinjr-code/medium-parser#readme",
+  "homepage": "https://github.com/jaustinjr-code/medium-rss-feed-parser#readme",
   "bugs": {
-    "url": "https://github.com/jaustinjr-code/medium-parser/issues"
+    "url": "https://github.com/jaustinjr-code/medium-rss-feed-parser/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jaustinjr-code/medium-parser.git"
+    "url": "git+https://github.com/jaustinjr-code/medium-rss-feed-parser.git"
   },
   "license": "MIT",
   "author": "jaustinjr",
