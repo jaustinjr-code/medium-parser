@@ -10,10 +10,12 @@ A lightweight Node.js library for fetching and parsing Medium RSS feeds using th
   - [Installation](#installation)
   - [API Reference](#api-reference)
     - [`getFeed(authorUsername)`](#getfeedauthorusername)
+    - [`parseFeed(authorUsername)`](#parsefeedauthorusername)
     - [Error Classes](#error-classes)
   - [Dependencies](#dependencies)
   - [Usage](#usage)
-    - [Example](#example)
+    - [Example: `getFeed`](#example-getfeed)
+    - [Example: `parseFeed`](#example-parsefeed)
     - [Handling Errors](#handling-errors)
   - [Limitations](#limitations)
   - [License](#license)
@@ -35,16 +37,16 @@ npm install medium-rss-feed-parser
 
 ## API Reference
 
-### `parseFeed(authorUsername)`
-
-- **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
-- **Returns:** `Promise<Object>` resolving with the parsed feed metadata and a list article of contents in JSON format.
-- **Throws:** One of the custom public error classes listed below.
-
 ### `getFeed(authorUsername)`
 
 - **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
 - **Returns:** `Promise<Object>` resolving with the RSS feed in JSON format and the feed contents in RSS format.
+- **Throws:** One of the custom public error classes listed below.
+
+### `parseFeed(authorUsername)`
+
+- **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
+- **Returns:** `Promise<Object>` resolving with the parsed feed metadata and a list article of contents in JSON format.
 - **Throws:** One of the custom public error classes listed below.
 
 ### Error Classes
@@ -126,7 +128,7 @@ try {
   } else if (err instanceof errors.StructureError) {
     // response missing expected fields
   } else if (err instanceof errors.RssError) {
-    // network/parse/http error wrapped, send a retry request
+    // fetch/network/parse/http error wrapped, send a retry request
   } else {
     // other unexpected error
   }
