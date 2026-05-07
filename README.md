@@ -35,6 +35,12 @@ npm install medium-rss-feed-parser
 
 ## API Reference
 
+### `parseFeed(authorUsername)`
+
+- **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
+- **Returns:** `Promise<Object>` resolving with the parsed feed metadata and a list article content.
+- **Throws:** One of the custom public error classes listed below.
+
 ### `getFeed(authorUsername)`
 
 - **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
