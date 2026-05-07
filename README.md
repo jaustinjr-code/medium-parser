@@ -44,7 +44,7 @@ npm install medium-rss-feed-parser
 ### `getFeed(authorUsername)`
 
 - **Parameters:** `authorUsername` (string) – must start with `@` and contain letters, numbers, `.`, or `_` (max 30 chars).
-- **Returns:** `Promise<Object>` resolving with the parsed RSS feed in JSON format and the feed contents in RSS format.
+- **Returns:** `Promise<Object>` resolving with the RSS feed in JSON format and the feed contents in RSS format.
 - **Throws:** One of the custom public error classes listed below.
 
 ### Error Classes
@@ -71,14 +71,14 @@ This library has no runtime dependencies other than the `fetch` API (available i
 
 ## Usage
 
-### Example
+### Example: `getFeed`
 
 ```js
 import mediumFetcher from "medium-rss-feed-parser/fetcher";
 
 async function main() {
   const feed = await mediumFetcher
-    .getFeed("@jaustinjr.blog")
+    .getFeed("@jaustinjr")
     .then((feed) => {
       console.log(feed.contents);
     })
@@ -86,7 +86,26 @@ async function main() {
       console.error("Failed to fetch feed:", err);
     });
 
-  // Use feed data as needed
+  // Use RSS feed contents as needed
+}
+
+main();
+```
+
+### Example: `parseFeed`
+
+```js
+import mediumParser from "medium-rss-feed-parser/parser";
+
+async function main() {
+  try {
+    const parsedFeed = await mediumParser.parseFeed("@jaustinjr");
+
+    // Use parsed feed and contents as needed
+    console.log(parsedFeed);
+  } catch (err) {
+    console.error("Failed to parse feed:", err);
+  }
 }
 
 main();
