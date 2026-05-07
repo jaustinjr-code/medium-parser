@@ -1,7 +1,7 @@
 declare namespace _default {
-  export { fetcher };
-  export { parser };
-  export { errors };
+    export { fetcher };
+    export { parser };
+    export { errors };
 }
 export default _default;
 import * as fetcher from "./fetcher.js";
