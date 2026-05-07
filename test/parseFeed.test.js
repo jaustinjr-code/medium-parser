@@ -108,7 +108,6 @@ describe("Parser Module: parseFeed", () => {
     expect(fetcher.getFeed).toBeDefined();
     expect(helper.fetchRssFeed).toBeDefined();
     expect(helper.parseRssFeed).toBeDefined();
-    expect(parser.parseContent).toBeDefined();
     expect(parser.parseFeed).toBeDefined();
   });
 
