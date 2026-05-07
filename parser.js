@@ -5,7 +5,7 @@ import { parseRssFeed } from "./rssHelper.js";
 /**
  * Fetches, parses, and reformats the Medium RSS feed for the given author.
  * @param {String} authorUsername - The Medium username only, e.g. '@jaustinjr'.
- * @returns {Promise<Object>} The parsed feed metadata and a list article content.
+ * @returns {Promise<Object>} The parsed feed metadata and a list of article contents.
  */
 export const parseFeed = async (authorUsername) => {
   const feed = await getFeed(authorUsername).catch((err) => {

@@ -12,7 +12,7 @@ import { fetchRssFeed } from "./rssHelper.js";
 /**
  * Uses All Origins to fetch a Medium RSS feed for a given author.
  * @param {String} authorUsername - The Medium username only, e.g. '@jaustinjr.blog'
- * @returns {Promise<any>} The Medium RSS feed in JSON, contents are in RSS format.
+ * @returns {Promise<Object>} The Medium RSS feed in JSON, contents are in RSS format.
  */
 export const getFeed = async (authorUsername) => {
   if (!validateAuthorUsername(authorUsername)) {
