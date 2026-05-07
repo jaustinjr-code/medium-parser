@@ -36,6 +36,11 @@ export const fetchRssFeed = async (feedUrl) => {
   });
 };
 
+/**
+ * Parses the feed content from RSS format to an object.
+ * @param {Object} feed - The JSON feed with RSS feed content.
+ * @returns {Promise<Object>} The parsed RSS feed contents.
+ */
 export const parseRssFeed = async (feed) => {
   const rssParser = new Parser();
 
