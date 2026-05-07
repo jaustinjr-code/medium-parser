@@ -27,7 +27,7 @@ export const parseFeed = async (authorUsername) => {
  * @param {Object} parsedFeed - The parsed Medium feed in JSON.
  * @returns {Object} The parsed and reformatted Medium feed for header images.
  */
-export const parseContent = (parsedFeed) => {
+const parseContent = (parsedFeed) => {
   const parsedContent = {
     ...parsedFeed,
     items: parsedFeed.items.map((item) => {
@@ -47,4 +47,4 @@ const parseImages = (content) => {
   return content.match(sourceImageRegex) || [];
 };
 
-export default { parseFeed, parseContent };
+export default { parseFeed };
